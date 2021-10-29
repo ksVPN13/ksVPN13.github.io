@@ -1,6 +1,6 @@
 
-let rows = 4;
-let columns = 4;
+let rows = 3;
+let columns = 3;
 const pWidth = 750;
 const pHeight = 750;
 const imgSrc = 'https://media.giphy.com/media/Jrl4FlTaymFFbNiwU5/giphy.gif';
@@ -138,10 +138,17 @@ function checkWin() {
     //console.log(currentLayout);
     //console.log(winCondition);
     if (isEqual(currentLayout, winCondition)) {
+        //if win condition is met, change text, stop clicks and remove margin from slides
         document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
         console.log('You win!');
         document.getElementById('blank').src = imgSrc;
         gameOver = true;
+
+        //loop through slides to remove margin
+        let sElem = document.getElementsByClassName('slide');
+        for (let i = 0; i < sElem.length; i++) {
+            sElem.item(i).style.margin = '0px';
+        }
     }
 }
 
