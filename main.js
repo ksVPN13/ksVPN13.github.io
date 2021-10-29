@@ -1,6 +1,6 @@
 
-let rows = 3;
-let columns = 3;
+let rows = 4;
+let columns = 4;
 const pWidth = 750;
 const pHeight = 750;
 const imgSrc = 'https://media.giphy.com/media/Jrl4FlTaymFFbNiwU5/giphy.gif';
