@@ -15,6 +15,7 @@ function createPuzzle(row, col) {
     winCondition = Array.from(document.getElementsByClassName('image'));
 }
 
+//takes row number and a count of columns to create the rows
 function createRow(index, col) {
     const pDiv = document.getElementById('puzzle');
     //create row div element
@@ -31,6 +32,7 @@ function createRow(index, col) {
     }
 }
 
+//takes a row element to append slide elements based on row number and column number
 function createSlide(rowDiv, rowNum, colNum) {
     //calculate image offset for slide
     let xMargin = -colNum*(pWidth/columns);
@@ -63,6 +65,7 @@ function createSlide(rowDiv, rowNum, colNum) {
     sDiv.appendChild(sImg);
 }
 
+//moves the image elements into new containers
 function move(sCont) {
     if (gameOver){
         return;
@@ -119,6 +122,7 @@ function move(sCont) {
     //console.log(sElem.item(i));
 }
 
+//checks if two arrays are the same
 function isEqual(arr1, arr2) {
     for (let i in arr1) {
         if (arr1[i] !== arr2[i]) {
@@ -128,6 +132,7 @@ function isEqual(arr1, arr2) {
     return true;
 }
 
+//checks win condition
 function checkWin() {
     let currentLayout = Array.from(document.getElementsByClassName('image'));
     //console.log(currentLayout);
@@ -140,6 +145,7 @@ function checkWin() {
     }
 }
 
+//shuffles the board by making a random number of moves
 function shuffle() {
     let numMoves = getRandomInt(100, 300);
 
@@ -148,14 +154,18 @@ function shuffle() {
     }
 }
 
+//moves a random slide, only picking one that is moveable
 function moveRandomSlide() {
+    //get the blank location
     let blank = document.getElementById('blank');
     let blankRow = parseInt(blank.parentElement.id[1]);
     let blankCol = parseInt(blank.parentElement.id[3]);
     
+    //get a random box number based on number of rows and columns
     let ranBox = getRandomInt(0, rows+columns);
     let ranSlide;
 
+    //selects a random slide and moves it
     if (ranBox < rows) {
         ranSlide = document.getElementById('r' + ranBox + 's' + blankCol);
         move(ranSlide);
@@ -167,19 +177,26 @@ function moveRandomSlide() {
     //console.log(ranSlide);
 }
 
+//gets a random int
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-  }
+}
 
+//takes the click event and add the move function to the item that was clicked
+function userMove(event) {
+    //console.log(event);
+    move(event.currentTarget);
+    checkWin();
+}
+
+//initialize puzzle and shuffle
 createPuzzle(rows, columns);
 shuffle();
 
+//adds click events to all slides
 let sElem = document.getElementsByClassName('slide');
 for (let i = 0; i < sElem.length; i++) {
-    sElem.item(i).addEventListener("click", function() {
-        move(sElem.item(i));
-        checkWin();
-    })}
-
+    sElem.item(i).addEventListener("click", userMove);
+}
