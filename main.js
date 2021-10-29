@@ -4,7 +4,8 @@ let columns = 3;
 const pWidth = 600;
 const pHeight = 600;
 const imgSrc = 'https://media.giphy.com/media/Jrl4FlTaymFFbNiwU5/giphy.gif';
-let winCondition
+let winCondition;
+let gameOver = false;
 
 function createPuzzle(row, col) {
     //create all rows
@@ -63,6 +64,9 @@ function createSlide(rowDiv, rowNum, colNum) {
 }
 
 function move(sCont) {
+    if (gameOver){
+        return;
+    }
     //get current row and column information from parent element
     let currentRow = parseInt(sCont.id[1]);
     let currentCol = parseInt(sCont.id[3]);
@@ -131,6 +135,8 @@ function checkWin() {
     if (isEqual(currentLayout, winCondition)) {
         document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
         console.log('You win!');
+        document.getElementById('blank').src = imgSrc;
+        gameOver = true;
     }
 }
 
