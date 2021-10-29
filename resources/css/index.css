@@ -9,7 +9,7 @@
    
   h1 {
     color: white;
-    font-size: 100px;
+    font-size: 75px;
     font-weight: bold;
     text-align:center;
     margin: 10px;
@@ -30,4 +30,10 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+  }
+
+  p {
+    color: white;
+    font-size: 20px;
+    text-align: center;
   }
