@@ -6,7 +6,10 @@ const pHeight = 750;
 const imgSrc = 'https://media.giphy.com/media/Jrl4FlTaymFFbNiwU5/giphy.gif';
 let winCondition;
 let gameOver = false;
+let clicks = 0;
 
+
+//creates the puzzle
 function createPuzzle(row, col) {
     //create all rows
     for (let i=0; i<row; i++) {
@@ -86,6 +89,7 @@ function move(sCont) {
 
     if(currentRow === blankRow && currentCol === blankCol) {
         //do nothing
+        return;
     } else if (currentRow === blankRow) {
         //move whole row
         if (currentCol < blankCol) {
@@ -118,7 +122,10 @@ function move(sCont) {
                 document.getElementById('r' + (i - 1) + 's' + currentCol).appendChild(moveSlide);
             }
         }
+    } else {
+        return; //stops from counting click
     }
+    countClick();
     //console.log(sElem.item(i));
 }
 
@@ -159,6 +166,9 @@ function shuffle() {
     for (let i = 0; i < numMoves; i++) {
         moveRandomSlide();
     }
+
+    clicks = 0;
+    document.getElementById('click').innerHTML = clicks;
 }
 
 //moves a random slide, only picking one that is moveable
@@ -196,6 +206,12 @@ function userMove(event) {
     //console.log(event);
     move(event.currentTarget);
     checkWin();
+}
+
+//counts and upates clicks
+function countClick() {
+    clicks++;
+    document.getElementById('click').innerHTML = clicks;
 }
 
 //initialize puzzle and shuffle
