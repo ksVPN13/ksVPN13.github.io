@@ -1,9 +1,9 @@
 
-const rows = 6;
-const columns = 6;
+const rows = 3;
+const columns = 4;
 let pWidth;
 let pHeight;
-const imgSrc = 'https://i.redd.it/7zw4f6ppp9w71.jpg';
+const imgSrc = 'https://s7.orientaltrading.com/is/image/OrientalTrading/VIEWER_ZOOM/disney-frozen-elsa-and-anna-cardboard-stand-up~13656049';
 let winCondition;
 let gameOver = false;
 let clicks = 0;
