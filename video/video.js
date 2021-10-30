@@ -1,5 +1,5 @@
 
-const rows = 6;
+const rows = 5;
 const columns = 5;
 let pWidth;
 let pHeight;
@@ -11,7 +11,7 @@ let clicks = 0;
 //set width and heigh values based on screen type
 if (screen.width < 450 ) {
     pWidth = 95;
-    pHeight = 90;
+    pHeight = 80;
     //console.log('mobile');
 } else {
     pWidth = 85;
@@ -63,7 +63,7 @@ function createSlide(rowDiv, rowNum, colNum) {
     //let sImg = document.createElement('img');
     let sImg = document.createElement('VIDEO');
     sImg.src = imgSrc;
-    sImg.autoplay = true;
+    //sImg.autoplay = true;
     sImg.muted = true;
     sImg.loop = true;
     sImg.className = 'image';
@@ -247,9 +247,19 @@ function countClick() {
     document.getElementById('click').innerHTML = clicks;
 }
 
+//try to play videos at the same time
+function playVids(){
+    let sElem = document.getElementsByClassName('image');
+    for (let i = 0; i < sElem.length; i++) {
+        sElem.item(i).play();
+    }
+}
+
 //initialize puzzle and shuffle
 createPuzzle(rows, columns);
 shuffle();
+
+setTimeout(playVids, 5000);
 
 //adds click events to all slides
 let sElem = document.getElementsByClassName('slide');
