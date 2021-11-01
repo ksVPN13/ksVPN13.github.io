@@ -1,22 +1,27 @@
+/* Slider Puzzle - Customizable*/
 
+//declare and set initial variables
 let rows = 4;
 let columns = 4;
-let pWidth = 100;
-let pHeight = 100;
+const pWidth = 100;
+const pHeight = 100;
 let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
 let gameOver = false;
 let clicks = 0;
-let rSlider = document.getElementById('rows');
-let cSlider = document.getElementById('cols');
-let rVal = document.getElementById('rVal');
-let cVal = document.getElementById('cVal');
-let imgUrl = document.getElementById('url');
+
+//get elements from webpage
+const rSlider = document.getElementById('rows');
+const cSlider = document.getElementById('cols');
+const rVal = document.getElementById('rVal');
+const cVal = document.getElementById('cVal');
+const imgUrl = document.getElementById('url');
 const form = document.getElementById('form');
 const footer = document.getElementById('footer');
 const submitButton = document.getElementById('submit');
 const titleText = document.getElementById('titleText');
-let localFile = document.getElementById('local');
+const localFile = document.getElementById('local');
+const clickCount = document.getElementById('click');
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
@@ -26,18 +31,6 @@ cSlider.oninput = function() {
     cVal.innerHTML = this.value;
 }
 
-//set width and heigh values based on screen type
-/*
-if (screen.width < 450 ) {
-    pWidth = 95;
-    pHeight = 96;
-    //console.log('mobile');
-} else {
-    pWidth = 85;
-    pHeight = 80;
-    //console.log('desktop');
-}*/
-
 //creates the puzzle
 function createPuzzle(row, col) {
     //create all rows
@@ -46,7 +39,6 @@ function createPuzzle(row, col) {
     }
     makeClickable();
     winCondition = Array.from(document.getElementsByClassName('image'));
-    //shuffle();
 }
 
 //takes row number and a count of columns to create the rows
@@ -82,6 +74,7 @@ function createSlide(rowDiv, rowNum, colNum) {
 
     //create slide image element
     let sImg = document.createElement('img');
+    //sets first slide id to be 'blank' and make it invisible, but still clickable
     if (rowNum === 0 && colNum === 0) {
         sImg.id = 'blank';
         sImg.style.opacity = 0;
@@ -89,10 +82,12 @@ function createSlide(rowDiv, rowNum, colNum) {
         sImg.id = 'r' + rowNum + 'i' + colNum;
     }
     sImg.src = imgSrc;
+    //set image size to take up the full screen
     sImg.className = 'image';
     sImg.style.objectFit = 'cover';
     sImg.style.width = document.body.clientWidth + 'px';
     sImg.style.height = document.body.clientHeight + 'px';
+
     //margins offset the image to show the right piece for each slide
     sImg.style.margin = yMargin + 'px 0 0 ' + xMargin + 'px';
 
@@ -155,7 +150,7 @@ function move(sCont) {
             }
         }
     } else {
-        return; //stops from counting click
+        return; //stops from counting click when a non-moving slide is clicked
     }
     countClick();
     //console.log(sElem.item(i));
@@ -177,9 +172,9 @@ function checkWin() {
     //console.log(currentLayout);
     //console.log(winCondition);
     if (isEqual(currentLayout, winCondition) && (!gameOver)) {
-        //if win condition is met, change text, stop clicks and remove margin from slides
+        //if win condition is met, show new game button, stop clicks, and remove borders from slides
         //document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
-        console.log('You win!');
+        //console.log('You win!');
         document.getElementById('blank').style.opacity = 1;
         gameOver = true;
 
@@ -196,9 +191,9 @@ function checkWin() {
         playAgain.style.display = 'inline-block';
         playAgain.style.fontSize = '20px';
         playAgain.innerHTML = 'Play Again';
-        playAgain.style.cursor = 'pointer';
         document.getElementById('youWin').appendChild(playAgain);
 
+        //clicking the button just reloads the web page
         playAgain.addEventListener('click', () => location.reload());
     }
 }
@@ -212,10 +207,10 @@ function shuffle() {
     }
 
     clicks = 0;
-    document.getElementById('click').innerHTML = clicks;
+    clickCount.innerHTML = clicks;
 }
 
-//moves a random slide, only picking one that is moveable
+//moves a random slide, only picking one that is moveable; still can pick blank..
 function moveRandomSlide() {
     //get the blank location
     let blank = document.getElementById('blank');
@@ -247,7 +242,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
 }
 
-//takes the click event and add the move function to the item that was clicked
+//takes the click event and adds the move function to the item that was clicked
 function userMove(event) {
     //console.log(event);
     move(event.currentTarget);
@@ -265,32 +260,18 @@ function makeClickable() {
 //counts and upates clicks
 function countClick() {
     clicks++;
-    document.getElementById('click').innerHTML = clicks;
+    clickCount.innerHTML = clicks;
 }
-
-//get image data
-function getImgData() {
-    const files = localFile.files[0];
-    console.log(files);
-    if (files) {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(files);
-      fileReader.addEventListener("load", function () {
-        imgSrc = this.result;
-        console.log('image loaded');
-      });    
-    }
-  }
 
 //initialize puzzle and shuffle
 //createPuzzle(rows, columns);
 //shuffle();
 
+//generates puzzle based on input in the webpage
 submitButton.addEventListener('click', () => {
     rows = parseInt(rSlider.value);
     columns = parseInt(cSlider.value);
     imgSrc = imgUrl.value;
-    //console.log(rSlider.value + ' ' + cSlider.value + ' ' + imgUrl.value)
 
     const files = document.getElementById('local').files[0];
     //console.log(files);
@@ -310,6 +291,7 @@ submitButton.addEventListener('click', () => {
         shuffle();
     }
 
+    //remove form and title from page and add click count
     footer.style.visibility = 'visible';
     form.remove();
     titleText.remove();
