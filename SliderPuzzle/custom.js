@@ -1,7 +1,7 @@
 
 let rows = 4;
 let columns = 4;
-let pWidth = 99;
+let pWidth = 99.5;
 let pHeight = 99.5;
 let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
@@ -16,6 +16,8 @@ const form = document.getElementById('form');
 const footer = document.getElementById('footer');
 const submitButton = document.getElementById('submit');
 const titleText = document.getElementById('titleText');
+
+document.body.requestFullscreen('hide');
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
@@ -182,18 +184,18 @@ function checkWin() {
         document.getElementById('blank').style.opacity = 1;
         gameOver = true;
 
-        //loop through slides to remove margin
+        //loop through slides to remove border
         let sElem = document.getElementsByClassName('slide');
         for (let i = 0; i < sElem.length; i++) {
-            sElem.item(i).style.margin = '0px';
+            sElem.item(i).style.border = 'none';
         }
 
         //create play again button to refresh page
         let playAgain = document.createElement('div');
         playAgain.className = 'button';
         playAgain.id = 'reload';
-        playAgain.style.width = '15%'
-        playAgain.style.fontSize = '12px';
+        playAgain.style.display = 'inline-block';
+        playAgain.style.fontSize = '20px';
         playAgain.innerHTML = 'Play Again';
         playAgain.style.cursor = 'pointer';
         document.getElementById('youWin').appendChild(playAgain);

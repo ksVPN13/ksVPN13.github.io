@@ -3,10 +3,14 @@
     color: white;
   }
 
+  html {
+    height: 100%;
+  }
+
   body {
     background-color: black;
     touch-action: none;
-    margin: 1px 0;
+    margin: 2px;
     padding: 0;
   }
    
@@ -90,7 +94,7 @@
   #clicks {
     position: fixed;
     bottom: 0px;
-    right: 0px;
+    right: 2px;
     font-size: 10px;
     margin: 1px;
   }
