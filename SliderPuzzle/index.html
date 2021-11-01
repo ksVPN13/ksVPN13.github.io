@@ -8,11 +8,15 @@
   <link href="./custom.css" type="text/css" rel="stylesheet">
   <script type="text/javascript" src='./custom.js' defer></script>
   <link rel="manifest" href="./resources/images/site.webmanifest">
-  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body ondragstart="return false">
   <main>
-    <h1 id="title">Slider Puzzle</h1>
+    <div id='title'>
+      <h1 id="titleText">Slider Puzzle</h1>
+    </div>
+    <div id='youWin'></div>
     <div id="form">
       <form>
         <label for="url">Image URL:</label><br>
@@ -26,7 +30,7 @@
     </div>
     <div id="puzzle"></div>
     <div id="footer" style="visibility: hidden">
-      <p>
+      <p id="clicks">
         Clicks: <span id="click">0</span>
       </p>
     </div>

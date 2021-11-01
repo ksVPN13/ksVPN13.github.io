@@ -1,8 +1,8 @@
 
 let rows = 4;
 let columns = 4;
-let pWidth;
-let pHeight;
+let pWidth = 99;
+let pHeight = 99.5;
 let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
 let gameOver = false;
@@ -15,6 +15,7 @@ let imgUrl = document.getElementById('url');
 const form = document.getElementById('form');
 const footer = document.getElementById('footer');
 const submitButton = document.getElementById('submit');
+const titleText = document.getElementById('titleText');
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
@@ -25,15 +26,16 @@ cSlider.oninput = function() {
 }
 
 //set width and heigh values based on screen type
+/*
 if (screen.width < 450 ) {
     pWidth = 95;
-    pHeight = 90;
+    pHeight = 96;
     //console.log('mobile');
 } else {
     pWidth = 85;
     pHeight = 80;
     //console.log('desktop');
-}
+}*/
 
 //creates the puzzle
 function createPuzzle(row, col) {
@@ -173,9 +175,9 @@ function checkWin() {
     let currentLayout = Array.from(document.getElementsByClassName('image'));
     //console.log(currentLayout);
     //console.log(winCondition);
-    if (isEqual(currentLayout, winCondition)) {
+    if (isEqual(currentLayout, winCondition) && (!gameOver)) {
         //if win condition is met, change text, stop clicks and remove margin from slides
-        document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
+        //document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
         console.log('You win!');
         document.getElementById('blank').style.opacity = 1;
         gameOver = true;
@@ -190,11 +192,11 @@ function checkWin() {
         let playAgain = document.createElement('div');
         playAgain.className = 'button';
         playAgain.id = 'reload';
-        playAgain.style.width = '8%'
+        playAgain.style.width = '15%'
         playAgain.style.fontSize = '12px';
         playAgain.innerHTML = 'Play Again';
         playAgain.style.cursor = 'pointer';
-        document.getElementById('title').appendChild(playAgain);
+        document.getElementById('youWin').appendChild(playAgain);
 
         playAgain.addEventListener('click', () => location.reload());
     }
@@ -278,4 +280,5 @@ submitButton.addEventListener('click', () => {
     shuffle();
     footer.style.visibility = 'visible';
     form.remove();
+    titleText.remove();
 });

@@ -6,7 +6,8 @@
   body {
     background-color: black;
     touch-action: none;
-    height: 100vh;
+    margin: 1px 0;
+    padding: 0;
   }
    
   h1 {
@@ -25,12 +26,14 @@
 
   div.slide {
     overflow: hidden;
-    margin:1px;
+    box-sizing:border-box;
+    margin: 0px;
+    border: 1px solid black;
   }
 
   div.row {
     display: flex;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     justify-content: center;
   }
 
@@ -82,4 +85,21 @@
 
   #url {
     color: black;
+  }
+
+  #clicks {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    font-size: 10px;
+    margin: 1px;
+  }
+
+  #youWin {
+    position: fixed;
+    width: 100%;
+    top: 3px;
+    font-size: 10px;
+    margin-top: 7px;
+    text-align: center;
   }
