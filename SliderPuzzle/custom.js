@@ -16,6 +16,7 @@ const form = document.getElementById('form');
 const footer = document.getElementById('footer');
 const submitButton = document.getElementById('submit');
 const titleText = document.getElementById('titleText');
+let localFile = document.getElementById('local');
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
@@ -267,6 +268,20 @@ function countClick() {
     document.getElementById('click').innerHTML = clicks;
 }
 
+//get image data
+function getImgData() {
+    const files = localFile.files[0];
+    console.log(files);
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        imgSrc = this.result;
+        console.log('image loaded');
+      });    
+    }
+  }
+
 //initialize puzzle and shuffle
 //createPuzzle(rows, columns);
 //shuffle();
@@ -276,8 +291,25 @@ submitButton.addEventListener('click', () => {
     columns = parseInt(cSlider.value);
     imgSrc = imgUrl.value;
     //console.log(rSlider.value + ' ' + cSlider.value + ' ' + imgUrl.value)
-    createPuzzle(rows, columns);
-    shuffle();
+
+    const files = document.getElementById('local').files[0];
+    //console.log(files);
+
+    //if custom image was selected, load then generate puzzle
+    if (files) {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(files);
+      fileReader.addEventListener("load", function () {
+        imgSrc = this.result;
+        //console.log('image loaded');
+        createPuzzle(rows, columns);
+        shuffle();
+      });
+    } else {
+        createPuzzle(rows, columns);
+        shuffle();
+    }
+
     footer.style.visibility = 'visible';
     form.remove();
     titleText.remove();
