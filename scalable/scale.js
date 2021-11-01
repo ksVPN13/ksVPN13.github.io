@@ -1,6 +1,6 @@
 
-const rows = 3;
-const columns = 4;
+const rows = 5;
+const columns = 5;
 let pWidth;
 let pHeight;
 const imgSrc = 'https://s7.orientaltrading.com/is/image/OrientalTrading/VIEWER_ZOOM/disney-frozen-elsa-and-anna-cardboard-stand-up~13656049';
