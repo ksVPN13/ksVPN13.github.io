@@ -1,0 +1,40 @@
+* {
+    font-family: Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    background-color: black;
+    touch-action: none;
+    height: 100vh;
+  }
+   
+  h1 {
+    color: white;
+    font-size: 75px;
+    font-weight: bold;
+    text-align:center;
+    margin: 10px;
+  }
+
+  h2 {
+      font-size: 32px;
+      font-weight: bold;
+      color: black;
+  }
+
+  div.slide {
+    overflow: hidden;
+    margin:1px;
+  }
+
+  div.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  p {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+  }
