@@ -1,7 +1,7 @@
 
 let rows = 4;
 let columns = 4;
-let pWidth = 99.5;
+let pWidth = 100;
 let pHeight = 99.5;
 let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
@@ -16,8 +16,6 @@ const form = document.getElementById('form');
 const footer = document.getElementById('footer');
 const submitButton = document.getElementById('submit');
 const titleText = document.getElementById('titleText');
-
-document.body.requestFullscreen('hide');
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
