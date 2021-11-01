@@ -1,13 +1,39 @@
 
-let rows = 6;
-let columns = 6;
-const pWidth = 750;
-const pHeight = 750;
-const imgSrc = 'https://media.giphy.com/media/Jrl4FlTaymFFbNiwU5/giphy.gif';
+let rows = 4;
+let columns = 4;
+let pWidth;
+let pHeight;
+let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
 let gameOver = false;
 let clicks = 0;
+let rSlider = document.getElementById('rows');
+let cSlider = document.getElementById('cols');
+let rVal = document.getElementById('rVal');
+let cVal = document.getElementById('cVal');
+let imgUrl = document.getElementById('url');
+const form = document.getElementById('form');
+const footer = document.getElementById('footer');
+const submitButton = document.getElementById('submit');
 
+// Update the current slider value (each time you drag the slider handle)
+rSlider.oninput = function() {
+    rVal.innerHTML = this.value;
+  }
+cSlider.oninput = function() {
+    cVal.innerHTML = this.value;
+}
+
+//set width and heigh values based on screen type
+if (screen.width < 450 ) {
+    pWidth = 95;
+    pHeight = 90;
+    //console.log('mobile');
+} else {
+    pWidth = 85;
+    pHeight = 80;
+    //console.log('desktop');
+}
 
 //creates the puzzle
 function createPuzzle(row, col) {
@@ -15,7 +41,9 @@ function createPuzzle(row, col) {
     for (let i=0; i<row; i++) {
         createRow(i, col);
     }
+    makeClickable();
     winCondition = Array.from(document.getElementsByClassName('image'));
+    //shuffle();
 }
 
 //takes row number and a count of columns to create the rows
@@ -45,24 +73,25 @@ function createSlide(rowDiv, rowNum, colNum) {
     let sDiv = document.createElement('div');
     sDiv.className = 'slide';
     sDiv.id = 'r' + rowNum + 's' + colNum;
-    sDiv.style.width = (pWidth/columns) + 'px';
-    sDiv.style.height = (pHeight/rows) + 'px';
+    sDiv.style.width = (pWidth/columns) + 'vw';
+    sDiv.style.height = (pHeight/rows) + 'vh';
     rowDiv.appendChild(sDiv);
 
     //create slide image element
     let sImg = document.createElement('img');
     if (rowNum === 0 && colNum === 0) {
-        sImg.src = '';
         sImg.id = 'blank';
+        sImg.style.opacity = 0;
     } else {
-        sImg.src = imgSrc;
         sImg.id = 'r' + rowNum + 'i' + colNum;
     }
+    sImg.src = imgSrc;
     sImg.className = 'image';
     sImg.style.objectFit = 'cover';
-    sImg.style.width = pWidth + 'px';
+    sImg.style.width = pWidth + 'vw';
+    sImg.style.height = pHeight + 'vh';
     //margins offset the image to show the right piece for each slide
-    sImg.style.margin = yMargin + 'px 0 0 ' + xMargin + 'px';
+    sImg.style.margin = yMargin + 'vh 0 0 ' + xMargin + 'vw';
 
     //add slide image to container element
     sDiv.appendChild(sImg);
@@ -148,7 +177,7 @@ function checkWin() {
         //if win condition is met, change text, stop clicks and remove margin from slides
         document.getElementById('title').innerHTML = '<h1>You Win!</h1>';
         console.log('You win!');
-        document.getElementById('blank').src = imgSrc;
+        document.getElementById('blank').style.opacity = 1;
         gameOver = true;
 
         //loop through slides to remove margin
@@ -156,6 +185,18 @@ function checkWin() {
         for (let i = 0; i < sElem.length; i++) {
             sElem.item(i).style.margin = '0px';
         }
+
+        //create play again button to refresh page
+        let playAgain = document.createElement('div');
+        playAgain.className = 'button';
+        playAgain.id = 'reload';
+        playAgain.style.width = '8%'
+        playAgain.style.fontSize = '12px';
+        playAgain.innerHTML = 'Play Again';
+        playAgain.style.cursor = 'pointer';
+        document.getElementById('title').appendChild(playAgain);
+
+        playAgain.addEventListener('click', () => location.reload());
     }
 }
 
@@ -185,9 +226,11 @@ function moveRandomSlide() {
     //selects a random slide and moves it
     if (ranBox < rows) {
         ranSlide = document.getElementById('r' + ranBox + 's' + blankCol);
+        //console.log(ranSlide);
         move(ranSlide);
     } else {
         ranSlide = document.getElementById('r' + blankRow + 's' + (ranBox-rows));
+        //console.log(ranSlide);
         move(ranSlide);
     }
     //console.log(ranBox);
@@ -208,6 +251,14 @@ function userMove(event) {
     checkWin();
 }
 
+//adds click events to all slides
+function makeClickable() {
+    let sElem = document.getElementsByClassName('slide');
+    for (let i = 0; i < sElem.length; i++) {
+        sElem.item(i).addEventListener("click", userMove);
+    }
+}
+
 //counts and upates clicks
 function countClick() {
     clicks++;
@@ -215,11 +266,16 @@ function countClick() {
 }
 
 //initialize puzzle and shuffle
-createPuzzle(rows, columns);
-shuffle();
+//createPuzzle(rows, columns);
+//shuffle();
 
-//adds click events to all slides
-let sElem = document.getElementsByClassName('slide');
-for (let i = 0; i < sElem.length; i++) {
-    sElem.item(i).addEventListener("click", userMove);
-}
+submitButton.addEventListener('click', () => {
+    rows = parseInt(rSlider.value);
+    columns = parseInt(cSlider.value);
+    imgSrc = imgUrl.value;
+    //console.log(rSlider.value + ' ' + cSlider.value + ' ' + imgUrl.value)
+    createPuzzle(rows, columns);
+    shuffle();
+    footer.style.visibility = 'visible';
+    form.remove();
+});

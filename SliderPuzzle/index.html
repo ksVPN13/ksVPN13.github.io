@@ -5,16 +5,27 @@
   <link rel="apple-touch-icon" sizes="180x180" href="./resources/images/">
   <link rel="icon" type="image/png" sizes="32x32" href="./resources/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./resources/images/favicon-16x16.png">
-  <link href="./resources/css/index.css" type="text/css" rel="stylesheet">
-  <script type="text/javascript" src='./main.js' defer></script>
+  <link href="./custom.css" type="text/css" rel="stylesheet">
+  <script type="text/javascript" src='./custom.js' defer></script>
   <link rel="manifest" href="./resources/images/site.webmanifest">
   <meta name="apple-mobile-web-app-capable" content="yes" /> 
 </head>
 <body ondragstart="return false">
   <main>
-    <h1 id="title">Slider Puzzle </h1>
+    <h1 id="title">Slider Puzzle</h1>
+    <div id="form">
+      <form>
+        <label for="url">Image URL:</label><br>
+        <input type="text" id="url" name="url" value="https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711"><br><br>
+        <label for="rows">Number of Rows: </label><span id='rVal' class="value">4</span><br>
+        <input type="range" id="rows" name="rows" min=2 max=10 value=4><br><br>
+        <label for="cols">Number of Columns: </label><span id='cVal'class="value">4</span><br>
+        <input type="range" id="cols" name="cols" min=2 max=10 value=4><br><br>
+        <input type="button" class="button" id = 'submit' value="Generate Puzzle">
+      </form>
+    </div>
     <div id="puzzle"></div>
-    <div id="footer">
+    <div id="footer" style="visibility: hidden">
       <p>
         Clicks: <span id="click">0</span>
       </p>
