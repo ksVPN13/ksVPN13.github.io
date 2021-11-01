@@ -2,7 +2,7 @@
 let rows = 4;
 let columns = 4;
 let pWidth = 100;
-let pHeight = 99.5;
+let pHeight = 100;
 let imgSrc = 'https://cdnb.artstation.com/p/assets/images/images/024/538/827/original/pixel-jeff-clipa-s.gif?1582740711';
 let winCondition;
 let gameOver = false;
@@ -55,7 +55,8 @@ function createRow(index, col) {
     let rDiv = document.createElement('div');
     //set id of element to r#
     rDiv.id = 'r' + index;
-    rDiv.className = 'row';
+    rDiv.className = 'row'
+    rDiv.style.height = (pHeight/rows) + '%';
     //add rDiv to puzzle
     pDiv.appendChild(rDiv);
 
@@ -68,15 +69,14 @@ function createRow(index, col) {
 //takes a row element to append slide elements based on row number and column number
 function createSlide(rowDiv, rowNum, colNum) {
     //calculate image offset for slide
-    let xMargin = -colNum*(pWidth/columns);
-    let yMargin = -rowNum*(pHeight/rows);
+    let xMargin = -colNum*(document.body.clientWidth/columns);
+    let yMargin = -rowNum*(document.body.clientHeight/rows);
 
     //create slide container element
     let sDiv = document.createElement('div');
     sDiv.className = 'slide';
     sDiv.id = 'r' + rowNum + 's' + colNum;
-    sDiv.style.width = (pWidth/columns) + 'vw';
-    sDiv.style.height = (pHeight/rows) + 'vh';
+    sDiv.style.width = (pWidth/columns) + '%';
     rowDiv.appendChild(sDiv);
 
     //create slide image element
@@ -90,10 +90,10 @@ function createSlide(rowDiv, rowNum, colNum) {
     sImg.src = imgSrc;
     sImg.className = 'image';
     sImg.style.objectFit = 'cover';
-    sImg.style.width = pWidth + 'vw';
-    sImg.style.height = pHeight + 'vh';
+    sImg.style.width = document.body.clientWidth + 'px';
+    sImg.style.height = document.body.clientHeight + 'px';
     //margins offset the image to show the right piece for each slide
-    sImg.style.margin = yMargin + 'vh 0 0 ' + xMargin + 'vw';
+    sImg.style.margin = yMargin + 'px 0 0 ' + xMargin + 'px';
 
     //add slide image to container element
     sDiv.appendChild(sImg);
