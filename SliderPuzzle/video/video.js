@@ -5,11 +5,19 @@ let rows = 4;
 let columns = 4;
 const pWidth = 100;
 const pHeight = 100;
-let imgSrc = 'https://preview.redd.it/mw4e64kb27w71.gif?width=640&format=mp4&s=7c9f28915abf0a41516a17f0250efc985dea8fde';
+let imgSrc = 'https://i.imgur.com/OlNIfP1.mp4';
 let winCondition;
 let gameOver = false;
 let clicks = 0;
 let syncIndex = 1;
+let imgX = [];
+let imgY = [];
+let imgIndex = 0;
+let bodyHeight = document.body.clientHeight;
+let bodyWidth = document.body.clientWidth;
+let canvasWidth;
+let canvasHeight;
+let offsets = [];
 
 //get elements from webpage
 const rSlider = document.getElementById('rows');
@@ -23,7 +31,9 @@ const submitButton = document.getElementById('submit');
 const titleText = document.getElementById('titleText');
 const localFile = document.getElementById('local');
 const clickCount = document.getElementById('click');
+let videoSource;
 let allVideos;
+let ctx = [];
 
 // Update the current slider value (each time you drag the slider handle)
 rSlider.oninput = function() {
@@ -42,9 +52,36 @@ function createPuzzle(row, col) {
     makeClickable();
     winCondition = Array.from(document.getElementsByClassName('image'));
     allVideos = document.getElementsByClassName('image');
-    shuffle();
-    setTimeout(playVids, 5000);
+    //shuffle();
+    //setTimeout(playVids, 5000);
+    offsets = getOffsets();
+    getCtx();
+    render(offsets);
 }
+
+function getOffsets() {
+        let vidRatio = videoSource.videoWidth / videoSource.videoHeight;
+        let bodyH = parseFloat(bodyHeight);
+        let bodyW = parseFloat(bodyWidth);
+        let vidH = bodyH;
+        let vidW = bodyH * vidRatio;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        //console.log([videoSource, vidRatio, bodyH, bodyW, vidH, vidW])
+
+        if (vidW >= bodyW) {
+            offsetX = (bodyW - vidW) / 2;
+        } else {
+            vidW = bodyW;
+            vidH = bodyW / vidRatio;
+            offsetY = (bodyH - vidH) / 2;
+        }
+        //need to return width and hieght offsets
+        return [offsetX, offsetY, vidW, vidH];
+        
+}
+
 
 //takes row number and a count of columns to create the rows
 function createRow(index, col) {
@@ -64,11 +101,45 @@ function createRow(index, col) {
     }
 }
 
+function createVideo() {
+        videoSource = document.createElement('video');
+        videoSource.src = imgSrc;
+        videoSource.id = 'videoSource';
+        videoSource.muted = true;
+        videoSource.loop = true;
+        videoSource.autoplay = true;
+        videoSource.style.opacity = 0;
+        document.getElementById('footer').appendChild(videoSource);
+        videoSource.addEventListener( "loadedmetadata", function (e) {
+            createPuzzle(rows, columns);
+        }, false );
+}
+
+function getCtx() {
+    return new Promise(resolve => {
+        let canvases = document.getElementsByClassName('image');
+        //console.log(canvases[0].getContext('2d'));
+        for (let i = 0; i < canvases.length; i++) {
+            ctx[i] = canvases[i].getContext('2d');
+            //console.log(i);
+        }
+        resolve(ctx);
+    })
+}
+
+function render() {
+    for(var i = 0; i < ctx.length; i++) {
+        ctx[i].drawImage(videoSource, offsets[0], offsets[1], offsets[2], offsets[3]);
+    }
+    requestAnimationFrame(render);
+}
+
 //takes a row element to append slide elements based on row number and column number
 function createSlide(rowDiv, rowNum, colNum) {
     //calculate image offset for slide
-    let xMargin = -colNum*(document.body.clientWidth/columns);
-    let yMargin = -rowNum*(document.body.clientHeight/rows);
+    let xMargin = -colNum*(bodyWidth/columns);
+    //console.log(bodyWidth);
+    let yMargin = -rowNum*(bodyHeight/rows);
 
     //create slide container element
     let sDiv = document.createElement('div');
@@ -78,7 +149,9 @@ function createSlide(rowDiv, rowNum, colNum) {
     rowDiv.appendChild(sDiv);
 
     //create slide image element
-    let sImg = document.createElement('VIDEO');
+    let sImg = document.createElement('canvas');
+    sImg.width = bodyWidth;
+    sImg.height = bodyHeight;
     //sets first slide id to be 'blank' and make it invisible, but still clickable
     if (rowNum === 0 && colNum === 0) {
         sImg.id = 'blank';
@@ -86,15 +159,10 @@ function createSlide(rowDiv, rowNum, colNum) {
     } else {
         sImg.id = 'r' + rowNum + 'i' + colNum;
     }
-    sImg.src = imgSrc;
+
     //set image size to take up the full screen
     //sImg.autoplay = true;
-    sImg.muted = true;
-    sImg.loop = true;
     sImg.className = 'image';
-    sImg.style.objectFit = 'cover';
-    sImg.style.width = document.body.clientWidth + 'px';
-    sImg.style.height = document.body.clientHeight + 'px';
 
     //margins offset the image to show the right piece for each slide
     sImg.style.margin = yMargin + 'px 0 0 ' + xMargin + 'px';
@@ -187,11 +255,11 @@ function checkWin() {
         gameOver = true;
 
         //loop through slides to remove border
-        /*
+        
         let sElem = document.getElementsByClassName('slide');
         for (let i = 0; i < sElem.length; i++) {
             sElem.item(i).style.border = 'none';
-        }*/
+        }
 
         //create play again button to refresh page
         let playAgain = document.createElement('div');
@@ -272,37 +340,6 @@ function countClick() {
     clickCount.innerHTML = clicks;
 }
 
-//try to play videos at the same time
-function playVids(){
-    for (let i = 0; i < allVideos.length; i++) {
-        allVideos.item(i).currentTime = allVideos.item(0).currentTime;
-        allVideos.item(i).play();
-    }
-    setInterval(syncVidsV1, 500);
-    //setInterval(syncVidsV2, 5000);
-    //setTimeout(syncVidsV2,3000);
-}
-
-//this function needs to be called on an interal to sync each slide one at a time
-function syncVidsV1(){
-    if (syncIndex < allVideos.length) {
-        allVideos.item(syncIndex).currentTime = allVideos.item(0).currentTime
-        syncIndex++;
-    } else {
-        syncIndex = 1;
-    }
-}
-
-//this function needs to be called on an interal to sync each slide one at a time
-function syncVidsV2(){
-    //allVideos.item(0).pause();
-    for (let i = 0; i < allVideos.length; i++) {
-        allVideos.item(i).pause();
-        allVideos.item(i).currentTime = allVideos.item(0).currentTime;
-    }
-    playVids();
-}
-
 //initialize puzzle and shuffle
 //createPuzzle(rows, columns);
 //shuffle();
@@ -312,6 +349,8 @@ submitButton.addEventListener('click', () => {
     rows = parseInt(rSlider.value);
     columns = parseInt(cSlider.value);
     imgSrc = imgUrl.value;
+    bodyHeight = document.body.clientHeight;
+    bodyWidth = document.body.clientWidth;
 
     const files = document.getElementById('local').files[0];
     //console.log(files);
@@ -323,10 +362,12 @@ submitButton.addEventListener('click', () => {
       fileReader.addEventListener("load", function () {
         imgSrc = this.result;
         //console.log('image loaded');
-        createPuzzle(rows, columns);
+        //createPuzzle(rows, columns);
+        createVideo();
       });
     } else {
-        createPuzzle(rows, columns);
+        createVideo();
+        //createPuzzle(rows, columns);
     }
 
     //remove form and title from page and add click count
