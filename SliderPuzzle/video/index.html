@@ -1,24 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>ksVPN - Video Puzzle</title>
+  <title>ksVPN - Slider Puzzle</title>
   <link rel="apple-touch-icon" sizes="180x180" href="../resources/images/">
   <link rel="icon" type="image/png" sizes="32x32" href="../resources/images/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="../resources/images/favicon-16x16.png">
   <link href="./video.css" type="text/css" rel="stylesheet">
   <script type="text/javascript" src='./video.js' defer></script>
-  <link rel="manifest" href="./resources/images/site.webmanifest">
-  <meta name="apple-mobile-web-app-capable" content="yes" /> 
+  <link rel="manifest" href="../resources/images/site.webmanifest">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body ondragstart="return false">
   <main>
-    <h1 id="title">Slider Puzzle </h1>
+    <div id='title'>
+      <h1 id="titleText">Slider Puzzle</h1>
+    </div>
+    <div id='youWin' style="z-index: 1"></div>
+    <div id="form">
+      <form>
+        <label for="url">Image URL:</label><br>
+        <input type="text" id="url" name="url" value="https://preview.redd.it/mw4e64kb27w71.gif?width=640&format=mp4&s=7c9f28915abf0a41516a17f0250efc985dea8fde"><br><br>
+        <label for="local">Or select local:</label><br>
+        <input type="file" id="local" name="local" accept="video/*"><br><br>
+        <label for="rows">Number of Rows: </label><span id='rVal' class="value">4</span><br>
+        <input type="range" id="rows" name="rows" min=2 max=10 value=4><br><br>
+        <label for="cols">Number of Columns: </label><span id='cVal'class="value">4</span><br>
+        <input type="range" id="cols" name="cols" min=2 max=10 value=4><br><br>
+        <input type="button" class="button" id = 'submit' value="Generate Puzzle">
+      </form>
+    </div>
     <div id="puzzle"></div>
-    <div id="footer">
-      <p>
+    <div id="footer" style="visibility: hidden">
+      <p id="clicks">
         Clicks: <span id="click">0</span>
       </p>
     </div>
   </main>
 </body>
-</html>
+</html> 
