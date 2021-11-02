@@ -52,11 +52,10 @@ function createPuzzle(row, col) {
     makeClickable();
     winCondition = Array.from(document.getElementsByClassName('image'));
     allVideos = document.getElementsByClassName('image');
-    //shuffle();
-    //setTimeout(playVids, 5000);
-    offsets = getOffsets();
     getCtx();
+    offsets = getOffsets();
     render(offsets);
+    shuffle();
 }
 
 function getOffsets() {
@@ -277,7 +276,7 @@ function checkWin() {
 
 //shuffles the board by making a random number of moves
 function shuffle() {
-    let numMoves = getRandomInt(100, 300);
+    let numMoves = 1000; //getRandomInt(500, 600);
 
     for (let i = 0; i < numMoves; i++) {
         moveRandomSlide();
