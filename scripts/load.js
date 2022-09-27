@@ -1,11 +1,13 @@
 var code = "";
 
 function getPhpStuff(boolean){
-    return 1;
+    if(boolean == true) return 1;
+    return 0;
 }
 
 function setPhpStuff(int){
-    return true;
+    if(int == 1) return true;
+    return false;
 }
 
 function load() {
