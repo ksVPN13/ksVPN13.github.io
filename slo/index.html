@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+
+  <title>Space Lich Omega</title>
+
+  <meta name = "description" content = 'An incremental rpg called Space Lich Omega where you must defeat the awful lich created by Zertuk / Justin Forcier.  Inspired by Candybox by aniwey.'>
+
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+
+  <link rel="shortcut icon" href="favicon.ico">
+
+  <link href = "style.css" rel = "stylesheet">
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+  <script src = "locations.js"></script>
+  <script src = "locationObject.js"></script>
+  <script src = "options.js"></script>
+  <script src = "demon.js"></script>
+  <script src = "factory.js"></script>
+  <script src = "store.js"></script>
+  <script src = "reflecting.js"></script>
+  <script src = "monsters.js"></script>
+  <script src = "levelObject.js"></script>
+  <script src = "level.js"></script>
+  <script src = "main.js"></script>
+
+<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+
+</head>
+
+<body>
+  <div class = "wrapper">
+		<div id = "ectoplasmDiv">
+      <a href="http://store.steampowered.com/app/820620/" target="_blank" style="float: right; margin-right: 10px; margin-left: 10px" rel="noopener">My new game: Spooky Ghosts Dot Com!</a>
+      <a href="http://spacelichomega2.com" target="_blank" style="float: right; margin-right: 10px; margin-left: 10px" rel="noopener">Space Lich Omega 2!</a>
+      <button onclick = 'campRest()' id = "rest_perm">Rest</button>
+      <button class = "location_button" id = "town_button" value = "Main">Town</button>
+      <button class = "location_button" id = "mapButton" value = "Map">Map</button>
+			<button class = "location_button" id = "inventoryButton" value = "Inventory">Inventory</button>
+      <button id = "about_button" class = "location_button" value = "About">About</button>
+      <button id = "inverse_button" onclick = 'inverseColors()'>Inverse</button>
+      <button id = 'click_button' onclick = "ectoplasmClick(1)">Click</button>
+      <p id = "hc">HC ON</p>
+			
+			<p id = "ectoplasm">You have 0 gold</p>
+			<p id = "blood">?</p>
+			<p id = "hp">100/100</p>
+
+		</div><!--ectoplasmDiv-->
+		<div id = "error"></div>
+
+    <div id = "quest">
+      <button id = "health_potion_button" class = "potion_button" value = "healthPotion">Health Potion</button>
+      <button onclick = "useTeleportPotion()">Teleport</button>
+      <button onclick = "useFreezePotion()">Freeze</button>
+      <button onclick = "useBerserk()">Berserk</button>
+      <button onclick = "useShield()">Shield</button>
+      <button onclick = "resetSpells()">Reset CDs</button>
+      <br>
+      <p id = "potionCDText">Potion Cooldown: 0</p>
+      <p id = "error2"></p>
+      <br>
+      <p id = "quest_text">--</p>
+
+      <pre id = 'quest_ascii'>test</pre>      
+      <br>
+      <div id = "stat_wrap">      
+        <p id = "monster_stats">--</p>
+        <br>
+        <p id = "monster_message">--</p>
+        <br>
+        <p id = "player_stats">--</p>
+        <br>
+        <p id = "loot">--</p>
+        <br>
+        <p id = "special_loot">--</p>
+        <br>
+        <button id = "leave_quest">Leave</button>
+      </div><!--stat_wrap-->
+    </div><!--quest-->
+
+    <div id = 'location_div'>
+      <p id = 'location_text'></p>
+      <pre id = 'location_ascii'></pre>
+
+    <div id = 'church_special'>
+      <select id = "church_quest">
+        <option value = 'approach'>The Approach</option>
+      </select>
+      <button onclick = "getQuestSelect('#church_quest')">Enter</button>
+      <button id = 'figure' value = 'DemonWizardElder' class = 'location_button'>The Figure</option>
+      <button class = 'location_button' value = "Main">Leave</button>
+
+    </div><!--church_special-->
+
+    <div id = 'store_special'>
+      <div id = "storeWrapper">
+        <br>
+        <p id = "diamond_sword">Diamond Sword: <button class = "store_button" value = "diamondSword">10000</button></p>
+        <p id = "iron_sword">Iron Sword: <button class = 'store_button' value = 'ironSword,true'>1000</button></p>
+        <p id = "wood_sword">Wood Sword: <button class = 'store_button' value = 'woodSword,true'>100</button></p>
+        <p id = "iron_armor">Iron Armor: <button class = 'store_button' value = 'ironArmor'>500</button></p>
+        <p id = "diamond_armor">Diamond Armor: <button class = "store_button" value = "diamondArmor">5000</button></p>
+        <p>Health Potion: <button class = 'store_button' id = "hp_buy" value = 'healthPotion'>25</button></p>
+        <p>Mana Potion: <button class = 'store_button' id = "mana_buy" value = 'manaPotion'>25</button></p>
+        <p>Gear: <button class = 'store_button' id = "gear_buy" value = 'seed'>200</button></p>
+        <p id = "mapListing">Map: <button class = 'store_button' value = 'map,true'>50</button></p>
+        <p>Battery: <button class = 'store_button' id = "battery_buy" value = 'battery'>2000</button></p>
+        <p id = "runez">Magic Rune: <button class = 'store_button' id = "rune_buy" value = 'rune'>5</button></p>
+        <br>
+        <button class = 'location_button' value = "Main">Leave Store</button>
+      </div><!--storeWrapper-->
+    </div><!--store_special-->
+
+    <div id = 'pool_special'>
+      <button id = "pool_use" value = "PoolInside" class = "location_button">Yes</button>
+      <button class = 'location_button' value = "Map">No</button>
+    </div>
+
+    <div id = 'factory_special'>
+      <button value = "place_one" class = "factory_button">Place Gear</button>
+      <button value = "place_all" class = "factory_button">Place All</button>
+      <button value = "use_battery" class = "factory_button">Use Battery</button>
+      <button value = "make_flesh" class = "factory_button">Meld gunk and money</button>
+      <p id = "seeds_planted">Gears Placed: 0</p>
+      <p id = "ecto_gen"></p>
+      <p id = "blood_gen"></p>
+      <button id = "turn_off" onclick = "turnOffBattery()">Turn On Machine</button>
+      <button class = 'location_button' value = "Main">Leave Factory</button>
+    </div><!--factory_special-->
+
+    <div id = "cave_special">
+        <select id = "bearcave_quest">
+          <option value = "cave">The Cave</option>
+          <option id = "den" value = "den">The Den</option>
+        </select>
+        <button onclick = "getQuestSelect('#bearcave_quest')">Enter</button>
+        <br>
+        <button value = 'Wizard' id = "wizard_button" class = "location_button">Go in House</button>
+        <button class = 'location_button' value = "Map">Leave</button>
+    </div><!--cave_special-->
+    <div id = "rocket_special">
+      <button value = 'SpaceStation' class = 'location_button'>Continue</button>
+    </div><!--rocket_special-->
+    <div id = "camp_special">
+      <div id = "camp_scenario">
+        <button onclick = 'campgroundWait()'>Wait</button>
+        <button id = "search_camp" onclick = 'searchCamp()'>Search Camp</button>
+        <button id = "steal_items" onclick = 'stealItems()'>Take Items</button>
+      </div><!--camp_scenario-->
+      <div id = "camp_use">
+        <button  class = 'location_button' value = "Map">Leave</button>
+        <button id = 'rest' onclick = 'campRest()'>Rest</button>
+        <button id = "confess" onclick = 'campConfess()'>Confess</button>
+      </div><!--camp_use-->
+      <div id = "man">
+        <p id = "man_text">Hello traveler, you are free to join me
+        <br> for dinner and rest at my tent if you like</p>
+        <pre>
+               .--.
+             _/__  )
+              0)0`>|_
+        /V\   \-_.-_ `;
+       /'_/\_ /_.   './
+      ;._ `/ ``      |
+      |^ '-;._   _.' |
+      |^ ^  ||```    |
+    .'| ^  ^||       |
+   `'`|^ ^ ^|\__,.--;'
+      | ^ ^ | |     |
+      ;^ ^ ^; |     /
+       \^ ^/\)|    |
+        | ^|  |    |
+       /'-'\  \_   |
+      / ..  |  |'- |
+      |/  `\|  |   |
+               |   |
+              _|,__|
+             (_/  .'
+         jgs  (_.'
+        </pre>
+      </div><!--man-->
+    </div><!--camp_special-->
+
+    <div id = "inventory_special">
+      <div id = "item_list">
+        <h3>Items Found</h3>
+        <p id = "miningPick_item">Mining Pick: gives 10% extra money drops</p>
+        <p id = "staff_item">Staff: gives 5% sword enchant</p>
+        <p id = "lifeGem_item">Life Gem: gives 0.75hp/s</p>
+        <p id = "hood_item">Reaper Hood: gives 10% sword enchant</p>
+        <p id = "miniBear_item">Mini Drop Bear: gives 20% extra money drops</p>
+        <p id = "skull_item">Skull: gives 10% sword healing</p>
+        <p id = "trollHair_item">Troll Hair: gives 10% armor enchant</p>
+        <p id = "skullStaff_item">Skull Staff: gives 5% armor and sword enchant. gives 2.5hp/s</p>
+        <p id = "stickySlime_item">Sticky Slime: gives double money from gears</p>
+        <p id = "pizza_item">Pizza: gives an extra 420hp</p>
+        <p id = "robe_item">Robe: gives 5hp/s</p>
+        <p id = "riotShield_item">Riot Shield: gives 25% armor enchant</p>
+        <p id = "tome_item">Tome: gives 1hp/s, 10% sword healing, and an extra 500hp</p> 
+
+      </div><!--item_list-->
+      <h3>The Inventory</h3>
+
+      <p id = "inventoryItems">---</p>
+      <button class = 'potion_button' value = 'healthPotion'>Use Health Potion</button>
+
+      <br>
+      <h3>Player Stats</h3>
+      <p id = "playerInfo">---</p>
+      <br>
+      <button class = 'location_button' value = "Main">Leave Inventory</button>
+    </div><!--inventory-->
+
+    <div id = "pool_inside_special">
+      <div id = "fountain_buttons">
+        <button value = 'power' id= "power_choice" class = "pool_button">Power</button>
+        <button value = 'health' id = "health_choice" class = "pool_button">Health</button>
+        <button value = 'freedom' id = "freedom_choice" class = "pool_button">Freedom</button>
+        <br>
+      </div>
+      <button value = "Map" class = "location_button">Leave</button>
+    </div>
+
+    <div id = "main_special">
+      <pre class = 'location_ascii' value = "Store" id = "house1">
+          (
+  
+            )
+          ( _   _._
+           |_|-'_~_`-._
+        _.-'-_~_-~_-~-_`-._
+    _.-'_~-_~-_-~-_~_~-_~-_`-._
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     |  []  []   []   []  [] |
+     |           __    ___   |   
+   ._|  []  []  | .|  [___]  |_._._._._.
+   |=|________()|__|()_______|=|=|=|=|=|
+ ^^^^^^^^^^^^^^^ === ^^^^^^^^^^^^^^^^^^^
+     _______      ===   
+    <_Store_>       === 
+       ^|^             ===
+        |                 ===
+
+
+
+      </pre>
+      <pre value = "store,main" id = "house2">
+            )
+  
+          (
+            _)  _._
+           |_|-'_~_`-._
+        _.-'-_~_-~_-~-_`-._
+    _.-'_~-_~-_-~-_~_~-_~-_`-._
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     |  []  []   []   []  [] |
+     |           __    ___   |   
+   ._|  []  []  | .|  [___]  |_._._._._. 
+   |=|________()|__|()_______|=|=|=|=|=|
+ ^^^^^^^^^^^^^^^ === ^^^^^^^^^^^^^^^^^^^
+     _______      ===   
+    <_Store_>       === 
+       ^|^             ===
+        |                 ===
+
+
+
+      </pre>
+
+      <pre class = 'location_ascii' value = "Church" id = "church">
+
+  [ The Church ]
+
+              +
+             (|)
+   _____.___.|_|.
+  |    / \  |===|
+  |   /   \ | o |
+  |__/__v__\|, ,|
+  | | | | | || ||
+  |/| . . . |','|
+  ||| A A A | ,_|
+  |||_M_M_M_| |-|__
+  /          |==|  \
+_/           |==|   \_
+
+      </pre>
+      <pre class = 'location_ascii' value = "Factory" id = "factory">
+     __  . .* ,
+     ~#@#%(" .,$ @
+   .;#$% %
+  ..
+ ;. :                                 
+ ;==:                     -^% >,,^>%^*
+ ;. :                   " .,$ ' _'^
+ ;==:                   %  ......
+ ;. :                   ,,;      :
+ ;==:  ._______.       ;  ;      :
+ ;. :  ;    ###:__.    ;  ;      :
+.'  `._;       :  :__.' .'        `.
+
+             [ Factory ]
+      </pre>
+      <pre value = "field,main" id = "factory2">
+     ''%^   ^_
+     ~$.@%}^)  ''*
+   ."^ ';"
+  ..
+ ;. :                            
+ ;==:                     -*_* ,.@#(%*
+ ;. :                   ";#$% " ^^'
+ ;==:                   $  ......
+ ;. :                   ,,;      :
+ ;==:  ._______.       ;  ;      :
+ ;. :  ;    ###:__.    ;  ;      :
+.'  `._;       :  :__.' .'        `.
+
+             [ Factory ]
+      </pre>
+    </div><!--main_special-->
+
+    <div id = "map_special">
+      <div id = "map_info">
+      <p>The Map</p>
+      <button class = 'location_button' value = "Main">Leave Map</button>
+      </div><!--map_info-->
+      <div id = 'map_wrapper'>
+      
+      <pre value = 'Pool' id = "fountain" class = 'location_ascii'>
+           (' 
+           `), 
+       __cD"`.__ 
+      !_________!     
+        \_____/        
+  ~~~~~/_______\~~~~~fsc        
+                      
+  [ Reflecting Pool ]
+
+      </pre>
+      <pre value = 'Camp' id = "tent" class = 'location_ascii'>
+         ______
+ jgs    /     /\
+       /     /  \   
+      /_____/----\_    ( 
+      "     "          ).  
+     _ ___          o (:') o  
+    (@))_))        o ~/~~\~ o 
+                     o  o  o
+        [ Camp Site ]
+
+      </pre>
+      <pre id = "mount" value = "Mountain" class = 'location_ascii'>
+
+            ,/k\,
+           /  ih,\
+itz     ,-' ,  `:7b
+     _.-/   '  /b.`.4p,
+  --"  ,    ,-' ^6x, `."^=._
+
+      [ The Mountain ]
+      </pre>
+      <pre value = "Tower" id = "tower_map" class = 'location_ascii'>
+
+                          ._
+                          |~
+                        uuuuu
+                        |_#-|
+                        | _#|
+                        |_ -|
+   ________ .$$. ______ | - | _____________
+           .#$$$. __    |-  | ....__
+     _.--' $$$$$$    ` -[__N]        `--a:f-
+           $$$$$$    -.
+      -.    `:/'    _.))        .--.
+             ||   .'.-'     _..-.. _.-.
+      ._.-.  '"  /  (     .'      `.
+                 [ The Tower ]
+      </pre>
+      <pre value = "Cave" id = "cave" class = 'location_ascii'>
+
+
+
+       _______,^,___/
+     _/         `  /  `
+    /   `__       |
+ __/  ../__\..  `/ `
+/_______'  '____|     `
+    [ The Cave ]
+
+
+
+      </pre>
+      <pre value = "Wizard" id = "wizard_home" class = 'location_ascii'>
+
+          _
+        _|=|__________
+       /              \
+      /                \
+     /__________________\
+      ||  || /--\ ||  ||
+      ||[]|| | .| ||[]||
+    ()||__||_|__|_||__||()
+   ( )|-|-|-|====|-|-|-|( )
+jgs^^^^^^^^^^====^^^^^^^^^^^
+        [ The Wizard ]
+      </pre>
+      <pre value = "Castle" id = "castle" class = "location_ascii">
+
+                                  P
+     F~                          /\
+    /\                          /__\
+   /__\                         |. |
+   |n |                       :_|__|_:
+ :_|  |_:               p       |. |
+   | n|    p      p    /\       |. |
+   |  |   /\_____/\   /__\      |. |
+   |n |_=_|. . . .|_=_=_=_=_=_=_|. |
+   |n |. .|  ___  |. . . . . . .|. |
+   |n |   | |   | |             |. |
+ __|__|___|_|___|_|_____________|__|__
+/          /   /                      \
+
+           [ The Castle ]
+      </pre>
+
+      </div><!--map_wrapper-->
+    </div><!--map_special-->
+
+    <div id = "castle_special">
+      <select id = "castle_quest">
+        <option value = 'gate'>The Gates</option>
+        <option id = "armory" value = 'armory'>The Armory</option>
+        <option id = "throne" value = 'throne'>Throne Room</option>
+      </select>
+      <button onclick = "getQuestSelect('#castle_quest')">Enter</button>
+      <br>
+      <button id = "lich" value = "Lich" class = "location_button">The Lich</button>
+      <br>
+      <button class = 'location_button' value = "Map">Leave</button>
+    </div><!--castle_special-->
+
+    <div id = "future_special">
+      <pre class = 'location_ascii' value = "Store">
+
+
+ ^             ^               ^!^
+   ^ _______________________________
+    [=U=U=U=U=U=U=U=U=U=U=U=U=U=U=U=]
+    |.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.|
+    |        +-+-+-+-+-+-+-+        |
+    |        |    Store    |        |
+    |        +-+-+-+-+-+-+-+        |
+    |.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.|
+    |  _________  __ __  _________  |
+  _ | |___   _  ||[]|[]||  _      | | _
+ (!)||OPEN|_(!)_|| ,| ,||_(!)_____| |(!)
+.T~T|:.....:T~T.:|__|__|:.T~T.:....:|T~T.
+||_||||||||||_|||||||||||||_||||||||||_||
+~\=/~~~~~~~~\=/~~~~~~~~~~~\=/~~~~~~~~\=/~
+  | -------- | ----------- | -------- |
+~ |~^ ^~~^ ~~| ~^  ~~ ^~^~ |~ ^~^ ~~^ |^~
+Sher^
+        </pre>
+
+        <pre class = 'location_ascii' value = "Factory">
+  
+
+          ) ) )                     ) ) )
+        ( ( (                      ( ( (
+      ) ) )                       ) ) )
+   (~~~~~~~~~)                 (~~~~~~~~~)
+    | POWER |                   | POWER |
+    |       |                   |       |
+    I      _._                  I       _._
+    I    /'   `\                I     /'   `\
+    I   |   N   |               I    |   N   |
+    f   |   |~~~~~~~~~~~~~~|    f    |    |~~~~~~~~~~~~~~|
+  .'    |   ||~~~~~~~~|    |  .'     |    | |~~~~~~~~|   |
+/'______|___||__###___|____|/'_______|____|_|__###___|___|
+
+                      [ Factory ]
+        </pre>
+
+    </div><!--future_special-->
+
+    <div id = "lich_special">
+      <button value = 'who' class = 'lich_button'>Who are you?</button>
+      <button value = 'die' class = 'lich_button'>Prepare to die!</button>
+      <button id = 'lich_attack' class = 'lich_button' onclick = 'lichAttack()'>Attack the Lich</button>
+      <button id = 'continue' class = 'location_button' value = 'Main'>Continue</button>
+    </div><!--lich_special-->
+
+    <div id = "tower_special">
+      <select id = "tower_quest">
+        <option value = 'base'>Tower Entrance</option>
+        <option id = "upper" value = 'upper'>Upper Floor</option>
+        <option id = "top" value = 'top'>Top</option>
+      </select>
+      <button onclick = "getQuestSelect('#tower_quest')">Enter</button>
+      <br>
+      <button id = "monk_button" class = "location_button" value = 'Monk'>The Monk</button>
+      <br>
+      <button class = 'location_button' value = "Map">Leave</button>
+
+    </div><!--tower_special-->
+
+    <div id = "wizard_special">
+      <div id = "post_lich">
+        <button class = "wizard_button" value = "explain" id = "wizard_explain">Whats going on? What happened?</button>
+        <button class = "wizard_button" value = "time" id = "wizard_time">How long has it been?</button>
+        <button class = "wizard_button" value = "help" id = "wizard_help">What should I do?</button>
+      </div><!--post_lich-->
+
+      <br>
+      <button id = "enchantDmg" value = "sword" class = "enchantButton">Enchant Weapon (1000)</button>
+      <button id = "enchantRed" value = "armor" class = "enchantButton">Enchant Armor (1000)</button>
+      <br>
+      <button class = 'location_button' value = "Map">Leave</button>
+    </div><!--wizard_special-->
+
+
+    <div id = "monk_special">
+      <button value = "greet" id = "greet_monk" class = "monk_button">Greet the Monk</button>
+      <button  value = "kill" id = "kill_monk" class = "monk_button">Kill the Monk</button>
+      <button value = "learn" id = "learn_monk" class = "monk_button">Accept teachings</button>
+      <br>
+      <button value = "Map" class = "location_button">Leave</button>
+    </div><!--monk_special-->
+
+    <div id = "demon_special">
+      <div id = "choiceWrap">
+        <button onclick = "chooseSin('lust')">Lust</button>
+        <button onclick = "chooseSin('gluttony')">Gluttony</button>
+        <button onclick = "chooseSin('greed')">Greed</button>
+        <button onclick = "chooseSin('sloth')">Sloth</button>
+        <button onclick = "chooseSin('wrath')">Wrath</button>
+        <button onclick = "chooseSin('envy')">Envy</button>
+        <button onclick = "chooseSin('pride')">Pride</button>
+      </div>
+      <br>
+      <p>"If you leave you cant come back, Im a very busy demon!"</p>
+      <br>
+      <button class = 'location_button' value = "Main">Leave</button>
+    </div><!--demon_special-->
+
+    <div id = "mountain_special">
+      <div id = "rune_false">
+        <p>There is a strange pattern on etched into the mountain, it seems to do nothing.</p>
+        <button class = 'location_button' value = 'Map'>Leave</button>
+      </div><!--rune_false-->
+      <div id = "rune_true">
+        <p>The Magic Rune glows as you approach and the pattern on the mountain wall also lights up. A passage opens into the mountain.  Do you enter?</p>
+
+        <select id = "mountain_quest">
+          <option value = 'cavern'>Cavern Entrance</option>
+          <option id = 'mine' value = 'mine'>Mine</option>
+          <option id = 'depths' value = 'depths'>The Depths</option>
+        </select>
+        <button onclick = "getQuestSelect('#mountain_quest')">Enter</button>
+        <br>
+        <br>
+        <button class = 'location_button' value = "Map">Leave</button>
+      </div><!--rune_true-->
+    </div><!--mountain_special-->
+
+    <div id = "future_map">
+      <button class = 'location_button' value = 'Main'>Leave</button>
+      <br>
+      <pre class = "location_ascii" value = "Wizard">
+
+         _._._                       _._._
+        _|   |_                     _|   |_
+        | ... |_._._._._._._._._._._| ... |
+        | ||| |  o               o  | ||| |
+        | """ |  """    """    """  | """ |
+   ())  |[-|-]| [-|-]  [-|-]  [-|-] |[-|-]|  ())
+  (())) |     |---------------------|     | (()))
+ (())())| """ |  """    """    """  | """ |(())())
+ (()))()|[-|-]|  :::   .-"-.   :::  |[-|-]|(()))()
+ ()))(()|     | |~|~|  |_|_|  |~|~| |     |()))(()
+    ||  |_____|_|_|_|__|_|_|__|_|_|_|_____|  ||
+ ~ ~^^ @@@@@@@@@@@@@@/=======\@@@@@@@@@@@@@@ ^^~ ~
+      ^~^~                                ~^~^
+Sher^
+                   [ The Wizard ]
+      </pre>
+      <pre class = "location_ascii" value = "City">
+                       .|
+                       | |
+                       |'|            ._____
+               ___    |  |            |.   |' .---"|
+       _    .-'   '-. |  |     .--'|  ||   | _|    |
+    .-'|  _.|  |    ||   '-__  |   |  |    ||      |
+    |' | |.    |    ||       | |   |  |    ||      |
+ ___|  '-'     '    ""       '-'   '-.'    '`      |____
+jgs~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+                    [ The City ]
+      </pre>
+      <pre class = "location_ascii" value = "Forest" id = "forest_map">
+
+       ^  ^  ^   ^   ^  ^   ^  ^  ^   ^  ^
+      /|\/|\/|\ /|\ /|\/|\ /|\/|\/|\ /|\/|\
+      /|\/|\/|\ /|\ /|\/|\ /|\/|\/|\ /|\/|\
+ejm96 /|\/|\/|\ /|\ /|\/|\ /|\/|\/|\ /|\/|\
+
+                [The Forest ]
+      </pre>
+      <pre class = "location_ascii" value = "Cabin" id = "cabin_map">
+
+                /`\            (        /`\
+         /`\   // \\           ))      // \\
+        // \\  // \\  /`\______||      // \\
+        // \\  // \\ // /       \  /`\ // \\
+        // \\  // \\ ///_________\// \\// \\
+        // \\  // \\ // |-[+]---| // \\// \\
+        // \\  // \\ // |-------| // \\// \\
+ ....-----'------'-----''-------'---'----'--
+`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`ldb
+
+                  [ The Cabin ]
+      </pre>
+      <pre class = "location_ascii" value = "Lab" id = "lab_map">
+              _,                _.
+     (  `)            (`  ).
+  .=( ` ,_ `)    .-``(      ).
+ (.__.:-`-_.'   (.,,(.       '`.
+                      `--`--`'`
+         ____.........__H_
+      __/%%%%|%%%%%%%|%%%%\
+ _ ()/%%|:II:|II:::II|:II:|_ _ _
+|-(()|--|:II:|II:H:II|:II:|-|-|-|
+`'.'"^  ^` "^ "^|"|^'"' `^`-.^~'
+Sher^
+
+        [ Lich Laboratory ]
+      </pre>
+
+
+    </div><!--future_map-->
+    <div id = "laboratory_special">
+      <button value = 'pass' onclick = 'labScenario("pass")'>Im just passing through</button>
+      <button value = 'grab' onclick = 'labScenario("grab")'>Im here to pick up the fuel</button>
+      <button value = 'rip' onclick = 'labScenario("rip")'>I am your end</button>
+      <br>
+      <br>
+      <button value = 'Lab' class = 'location_button'>Leave</button>
+    </div><!--laboratory_special-->
+    <div id = "lab_special">
+      <select id = "lab_quest">
+        <option value = 'entrance'>Break In</option>
+        <option id = 'prison' value = 'prison'>Prison</option>
+        <option id = 'tunnel' value = 'tunnel'>Enter Tunnel</option>
+        <option id = 'danger' value = 'danger'>$--DANGER--$</option>
+        <option id = 'hanger' value = 'hanger'>The Hanger</option>
+      </select>
+      <button onclick = "getQuestSelect('#lab_quest')">Enter</button>
+      <br>
+      <button id = 'laboratory' value = 'Laboratory' class = 'location_button'>The Chemist Lab</button>
+      <br>
+      <button value = 'Map' class = 'location_ascii'>Leave</button>
+    </div><!--lab_special-->
+    <div id = "book_special">
+      <button value = 'CabinInside' class = 'location_button'>Put away the book</button>
+    </div>
+    <div id = "cabin_inside_special">
+      <button onclick = 'cabinRest()' id = 'cabin_rest'>Rest</button>
+      <button onclick = 'lightFire()'>Put log on fire</button>
+      <button value = 'Book' class = 'location_button'>Check out a book</button>
+      <br>
+      <button value = 'Cabin' class = 'location_button'>Go back outside</button>
+    </div><!--cabin_inside_special-->
+    <div id = "cabin_special">
+        <pre id = 'phase3'>    
+           ___
+     |     | |
+    / \    | |
+   |--o|===|-|
+   |---|   |$|
+  /     \  |L|
+ |  $    | |$|
+ |  L    |=| |
+ |  $    | | |
+ |_______| |_|
+  |@| |@|  | |
+___________|_|_
+        </pre>
+        <pre id = 'phase2'>    
+           ___
+           | |
+           | |
+        ===|-|
+   _____   |$|
+  /     \  |L|
+ |  $    | |$|
+ |  L    |=| |
+ |  $    | | |
+ |_______| |_|
+           | |
+___________|_|_
+        </pre>
+        <pre id = 'phase1'>    
+           ___
+           | |
+           | |
+        ===|-|
+           |$|
+           |L|
+           |$|
+          =| |
+           | |
+           |_|
+           | |
+___________|_|_
+        </pre>
+        <button id = "rocket_launch" class = "location_button" value = "Rocket">Launch Rocket</button>
+        <button value = 'CabinInside' class = "location_button">Go Inside</button>
+        <button value = 'Map' class = "location_button">Leave</button>
+    </div><!--cabin_special-->
+
+    <div id = "space_station_special">
+      <button value = 'Dock' class = "location_button">Dock Ship</button>
+    </div><!--space_station_special-->
+
+    <div id = "dock_special">
+      <select id = "dock_quest">
+        <option value = 'finish'>Fight the Lich</option>
+      </select>
+      <button onclick = "getQuestSelect('#dock_quest')">Enter</button>
+      <br>
+      <button value = "End" class = "location_button" id = "end_button">Destory the Lichs Phylactery</button>
+      <button value = "badEnd" class = "location_button" id = "badEnd_button">Fuse your soul with the Phylactery for unimaginable power</button>
+      <br>
+      <button value = "Map" class = "location_button">Leave</button>
+    </div><!--dock_special-->
+
+    <div id = "forest_special">
+      <select id = "forest_quest">
+        <option value = 'woods'>Run into the woods</button>
+        <option id = 'cabin' value = 'cabin'>Assault the cabin</button>
+      </select>
+      <button onclick = "getQuestSelect('#forest_quest')">Enter</button>
+      <br>
+      <button class = "location_button" value = "Map">Leave</button>
+    </div><!--forest_special-->
+
+    <div id = "sewer_special">
+      <select id = "sewer_quest">
+        <option value = 'inside'>Go Inside</option>
+        <option id = 'sewer' value = 'sewer'>The Sewer</option>
+      </select>
+      <button onclick = "getQuestSelect('#sewer_quest')">Enter</button>
+      <br>
+      <button class = "location_button" value = "City">Leave</button>
+    </div><!--sewer_special-->
+
+
+    <div id = "skyscraper_special">
+      <button id = "look_left" value = 'telescope' class = 'tele_button'>Look left</button>
+        <div id = "telescope">
+          <button value = 'left' class = 'tele_button'>Use telescope: Left</button>
+          <button value = 'up' class = 'tele_button'>Use telescope: Up</button>
+          <button value = 'right' class = 'tele_button'>Use telescope: Right</button>
+        </div><!--telescope-->
+        <br>
+        <button class = "location_button" value = "City">Leave</button>
+    </div><!--skyscraper_special-->
+
+    <div id = "lake_special">
+      <button value = "Fish" class = "location_button">Agree</button>
+      <button onclick = "checkFish()">Show Fish</button>
+      <button value = "City" class = "location_button">Leave</button>
+    </div><!--lake_special-->
+
+    <div id = "city_special">
+      <button value = "Lake" class = "location_button">The Lake</button>
+      <button value = "Sea" class = "location_button">The Sea</button>
+      <button value = "Skyscraper" class = "location_button">Skyscraper</button>
+      <button value = "Sewer" class = "location_button">The Sewer</button>
+      <br>
+      <button value = "Map" class = "location_button">Leave</button>
+    </div><!--city_special-->
+
+    <div id = "fish_special">
+      <button onclick = 'fishCast()'>Cast</button>
+      <button id = "reel" onclick = 'fishReel()'>Reel</button>
+      <br>
+      <button value = "Lake" class = "location_button">Leave</button>
+    </div><!--fish_special-->
+
+    <div id = "sea_special">
+      <button onclick = "flipperCheck()">Put flippers on</button>
+      <div id = "flipper_on">
+        <select id = "sea_quest">
+          <option value = "underwater">Underwater</option>
+        </select>
+        <button onclick = "getQuestSelect('#sea_quest')">Enter</button>
+      </div><!--flipper_on-->
+      <br>
+      <button value = "City" class = "location_button">Leave</button>
+    </div><!--sea_special-->
+
+    <div id = "credits_special">
+      <button class = "location_button" value = "Main">Leave</button>
+      <br>
+      <h2>Ascii Art Credit</h2>
+      <br>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=people/other">Shopkeeper</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/church">Church Inside and Out</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/tent">Tent</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/fountain.htm">Park and Fountain</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/castles.htm">Tower and Castle</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=religion/buddhism">Monk</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/demon">Demon Wizard</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/factory.htm">Factory 1</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/powrplnt.htm">Factory 2</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.asciiworld.com/-Lord-of-the-Rings-.html">Rune Door</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/cave">Cave</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/magician">Wizard</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=creatures/grim+reapers">Lich Hood</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=people/skeletons">Lich Face</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/city">City Upclose</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.ascii-art.de/ascii/def/fishing.txt">Fisherman</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/skyscrap.htm">Skyscraper</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.ascii-art.de/ascii/t/telescope.txt">Telescope</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.geocities.com/spunk1111/celestal.htm">Moon and Sea</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/cabins">Cabin</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/building/rooms.htm">Cabin Inside</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=objects/books">Book</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.chris.com/ascii/index.php?art=objects/buildings">Lich Lab</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/chemistry">Chemist</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.ascii-art.de/ascii/pqr/rockets.txt">Launch</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/celest/stations.htm">Space Station</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://sunnyspot.org/asciiart/gallery/startrek.html">Space Station Inside</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/celest/planets.htm">Post Battle</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://ascii.co.uk/art/mountain">Mountain</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.ascii-art.de/ascii/def/fishing.txt">Fisherman</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.ascii-art.de/ascii/c/cat.txt">The Beast</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/vehicles/rockets.htm">Rockets</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.geocities.com/spunk1111/mythos.htm#reaper">Lich</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.geocities.com/spunk1111/build.htm#skyline">City</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.geocities.com/spunk1111/build.htm#for%20sale">Shop</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.geocities.com/spunk1111/build.htm#tinhouses">Wizards Home</a></p>
+      <p class = "credits"><a class = "credits_link" href = "http://www.retrojunkie.com/asciiart/nature/forests.htm">Forest, Cabin in woods, Scary trees</a></p>
+      <br>
+    </div><!--credits_special-->
+    <div id = "about_special">
+      <button value = "Credits" class = "location_button">Ascii Art Credit</button>
+      <button value = "Main" class = "location_button">Leave</button>
+      <br>
+      <br>
+      <h2>About</h2>
+      <p>Space Lich Omega was created as a project to expand my javascript abilities.  It was heavily inspired by the game <a href = "http://candies.aniwey.net/">Candybox</a> made by aniwey.</p>
+      <p>The source code is availible on <a href = "https://github.com/Zertuk/incremental">Github</a>!</p>
+      <p>Visit my website <a href = "http://zertukis.com">zertukis.com</a> or follow me on <a href = "https://twitter.com/Zertuk">twitter.</a>
+      <p>If you find any bugs/issues you can <a href = "mailto:just.forcier@gmail.com">e-mail</a>
+      and Ill take care of it. Thanks for playing!</p>
+      <br>
+      <button onclick = "HCMode()">Hardcore Mode</button>
+      <button onclick = 'resetGame()'>Reset Game</button>
+  </div><!--location_div-->
+	</div><!--wrapper-->
+
+
+
+</body>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-48873622-9', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+
+</html>

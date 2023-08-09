@@ -1,0 +1,236 @@
+#badEnd_button, #end_button, #miningPick_item, #staff_item, #lifeGem_item, #hood_item, #miniBear_item, #skull_item, #trollHair_item, #skullStaff_item, #stickySlime_item, #pizza_item, #robe_item, #riotShield_item, #tome_item, #about_special, #rest_perm, #tower_map, #post_lich, #wizard_help, #wizard_time, #credits_special, #cave, #castle, #wizard_home, #learn_monk, #kill_monk, #diamond_armor, #diamond_sword, #lab_map, #forest_map, #rocket_launch, #wizard_button, #monk_special, #monk_button, #dock_special, #space_station_special, #rocket_special, #launch_rocket, #sewer, #cabin, #cabin_map, #laboratory, #laboratory_special, #danger, #prison, #hanger, #tunnel, #lab_special, #book_special, #cabin_inside_special, #cabin_rest, #cabin_special, #phase2, #phase3, #forest_special, #sewer_special, #flipper_on, #telescope, #skyscraper_special, #sea_special, #fish_special, #city_special, #lake_special, #reel, #future_map, #continue, #future_special, #lich_special, #lich_attack, #wizard_special, #enchant_armor, #enchant_sword, #lich, #depths, #upper, #top, #den, #figure, #mine, #castle_special, #cave_special, #mountain_special, #demon_special, #tower_special, #map_special, #main_special, #camp_special, #store_special, #pool_special, #pool_inside_special, #factory_special, #inventory_special, #church_special, #storeButton, #location_ascii2, #den_quest, #cave_quest, #map2, #future, #cabin, #cavern, #monk, #base_quest, #upper_quest, #top_quest, #main, #depths_quest, #approach_quest, #cavern_quest, #mine_quest, #mountain, #confess, #camp_use, #steal_items, #man, #man_text, #quest, #camp_ground, #churchInside, #train2, #iron_sword, #trainStation, #trainShow, #shop_keeper_blink, #factory2, #house2, #demon, #mountain,  #rune_true, #tower, #poolYes, #fieldButton, #mapButton, #batteryButton, #inventory, #reflectingPool, #field, #store, #map {
+	display: none;
+}
+
+#click_button, #mapButton, #rest_perm, #about_button, #item_list, #inverse_button, #town_button {
+	float: right;
+}
+
+#error2 {
+	color: red;
+}
+
+#item_list {
+	margin-right: 50%;
+}
+a {
+	text-decoration: none;
+	color: orange;
+}
+
+a:hover {
+	color: darkorange;
+}
+#phase1, #phase2, #phase3 {
+	float: left;
+}
+#shop_keeper, #shop_keeper_blink {
+	float: right;
+	max-width: 500px;
+	margin-right: 10%;	
+}
+
+.location_ascii {
+	float: left;
+}
+
+
+#location_div {
+	display: inline;
+}
+
+#main {
+	display: inline;
+}
+
+#tower_special, #cave_special, #castle_special {
+	margin-left: 25px;
+	float: left;
+}
+
+#camp_special, #wizard_home, #castle {
+	float: left;
+}
+#camp_scenario,#camp_use {
+	margin-bottom: 100px;
+}
+#man_text {
+	float: right;
+	margin-top: -50px;
+	margin-right: 120px;
+}
+
+#store_special {
+	float: left;
+	margin-left: 50px;
+}
+
+#location_ascii {
+	float: left;
+}
+
+#hc {
+	display: none;
+	float: right;
+	margin-top: -1px;
+}
+
+
+pre {
+	font-size: 14px;
+}
+
+pre p {
+	font-size: 14px;
+}
+
+#quest, #quest pre, #quest p {
+	font-size: 18px;
+}
+
+#hp {
+	max-width: 98.5%;
+	background-color: green;
+	text-align: center;
+	border: 1px solid #21A652;
+}
+#camp_ground {
+	max-width: 900px;
+}
+
+#quest p{
+	display: inline;
+}
+#player_stats {
+	width: 300px;
+}
+#monster_stats {
+	width: 300px;
+}
+#map_info {
+	text-align: center;
+}
+
+#map_wrapper {
+	margin-top: 50px;
+	height: 300px;
+	padding: 20px;
+}
+
+#cave {
+	float: left;
+}
+
+pre {
+		margin: 5px;
+
+}
+#fountain {
+	float: left;
+
+}
+#mount {
+	float: left;
+
+	}
+
+#tent{
+	float: left;
+}
+#station {
+	float: left;
+}
+
+#demon1 {
+	margin-left: 100px;
+}
+
+#tower_map {
+	width: 400px;
+}
+
+#inventoryButton {
+	float: right;
+}
+
+#ectoplasmDiv {
+	height: 100px;
+	border: 1px solid white;
+	margin-top: -10px;
+	padding-bottom: 9px;
+	
+}
+#factory, #factory2 {
+	max-width: 325px;
+	float: right;
+	margin-top: 10%;
+}
+
+
+
+#house2, #house1 {
+	width: 350px;
+	float: left;
+	margin-top: 10%
+}
+#church {
+	width: 200px;
+	position: absolute;
+	margin-left: 37%;
+}
+
+#tower_map {
+	float: left;
+}
+
+.wrapper {
+	max-width: 95%;
+	margin: 0 auto;
+}
+
+ #store_status{
+ 	font-size: 16px;
+ 	height: 30px;
+ }
+
+#storeWrapper {
+	max-width: 200px;
+	float: left;
+}
+
+#error {
+	color: red;
+	font-size: 20px;
+	height: 30px;
+	text-align: center;
+}
+
+#store p {
+	font-size: 20px;
+}
+
+#store_status {
+	float: right;
+}
+
+p {
+	font-size: 18px;
+	margin: 10px;
+}
+
+button {
+	border: 1px solid black;
+	font-size: 16px;
+}
+
+button:active {
+	background-color: grey;
+	color: white;
+}
+
+body {
+	font-family: 'Open Sans Condensed', sans-serif;
+	color: white;
+	background-color: black;
+}
+
